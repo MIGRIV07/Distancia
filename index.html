@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Mapa Interactivo FES Campo IV</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+}
+
+#panel{
+background:#f4f4f4;
+padding:10px;
+}
+
+#map{
+height:90vh;
+}
+
+select,button{
+padding:6px;
+margin:5px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="panel">
+
+<b>Inicio fijo: Edificio de Gobierno</b><br>
+Coordenadas:
+X = -99.18964852390755 |
+Y = 19.69220918018324 |
+Z = 2253.14 m
+<br><br>
+
+Destino:
+
+<select id="destino"></select>
+
+<button onclick="calcular()">Calcular distancia</button>
+<button onclick="limpiar()">Limpiar ruta</button>
+
+<span id="resultado"></span>
+
+</div>
+
+<div id="map"></div>
+
+<script>
+
+var gobierno=[19.69220918018324,-99.18964852390755];
+
+var puntos={
+
+"Biblioteca":65.6,
+"Servicios Escolares":103.2,
+"L-3":122.8,
+"A-2":143.5,
+"A-7":156.6,
+"Seminario":167.5,
+"A-1":176.2,
+"A-8":180.9,
+"A-9":180.3,
+"A-6":187.2,
+"A-11":195.0,
+"L-1":204.5,
+"L-2":225.3,
+"A-12":238.5,
+"Idiomas":243.8,
+"Centro de computo":284.7,
+"Auditorio":346.7,
+"A-13":348.7,
+"A-14":389.3,
+"L-4":445.0,
+"Casa Blanca":472.7,
+"A-4":555.6,
+"A-3":560.6,
+"L-6":540.47,
+"L-7":574.11,
+"L-8":402.71,
+"L-9":146.94,
+"Mediateca":453.26,
+"Invernaderos 1":261.13,
+"Invernaderos 2":356.39,
+"LIME I":272.96,
+"LIME II":472.7,
+"LIME III":555.6,
+"LIME IV":560.6,
+"Unidad Investigación Multidisciplinaria":457.71,
+"Unidad de Aislamiento":486.83,
+"Hospital pequeñas especies":469.67,
+"Hospital equinos":508.49,
+"Auditorio MVZ":345.28,
+"Unidad Enseñanza Quirurgica":345.28,
+"Centro Enseñanza Agropecuaria":483.48,
+"Comedor IME":266.59,
+"Comedor Veterinaria":472.7,
+"Silos":459.87,
+"Talleres Culturales":459.87,
+"Taller Escultura Metal":429.7,
+"Gimnasio":218.2,
+"Cubiculo Profesores":61.4,
+"Modulo de Ventas":193.29,
+"Servicios Generales":232.2
+
+};
+
+var map=L.map('map').setView(gobierno,17);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+maxZoom:19
+}).addTo(map);
+
+L.marker(gobierno).addTo(map)
+.bindPopup("Edificio de Gobierno (Punto inicial)").openPopup();
+
+var select=document.getElementById("destino");
+
+for(var lugar in puntos){
+
+select.innerHTML+=`<option>${lugar}</option>`;
+
+}
+
+var linea;
+
+function calcular(){
+
+var lugar=select.value;
+
+var distancia=puntos[lugar];
+
+var lat=gobierno[0]+(Math.random()*0.002-0.001);
+var lon=gobierno[1]+(Math.random()*0.002-0.001);
+
+if(linea){map.removeLayer(linea)}
+
+linea=L.polyline([gobierno,[lat,lon]]).addTo(map);
+
+L.marker([lat,lon]).addTo(map).bindPopup(lugar).openPopup();
+
+document.getElementById("resultado").innerHTML=
+"Distancia desde Gobierno: "+distancia+" metros";
+
+}
+
+function limpiar(){
+
+location.reload();
+
+}
+
+</script>
+
+</body>
+</html>
